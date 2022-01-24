@@ -5,14 +5,17 @@
 
     /* Modules */
     "module": "commonjs",
-    "outDir": "../lib/",
+    "outDir": "lib/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "resolveJsonModule": true,
 
     /* Type Checking */
     "strict": true,
     
     /* Completeness */
     "skipLibCheck": true
-  }
+  },
+  "include": ["**/src/*"]
 }

@@ -4,17 +4,23 @@ Typescript version of [puppeteer-hcaptcha](https://github.com/aw1875/puppeteer-h
 
 ## Usage
 
-```javascript
-await hcaptcha(page);
+```typescript
+await hcaptcha(page: Page);
 ```
 
-- `page` [&lt;Page&gt;](https://pptr.dev/#?product=Puppeteer&version=v12.0.1&show=api-class-page) - Puppeteer Page Instance
+-   `page` [&lt;Page&gt;](https://pptr.dev/#?product=Puppeteer&version=v12.0.1&show=api-class-page) - Puppeteer Page Instance
 
-```javascript
-await hcaptchaToken(url);
+```typescript
+await hcaptchaToken(url: string);
 ```
 
-- `url` [&lt;string&gt;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) - URL of page with captcha on it
+-   `url` [&lt;string&gt;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#string_type) - URL of page with captcha on it
+
+### Compile the code
+
+```bash
+tsc
+```
 
 ### Automatically set respone value
 
@@ -23,74 +29,72 @@ await hcaptchaToken(url);
 const puppeteer = require("puppeteer-extra");
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
 
-// Require our hcaptcha method (assuming your file is in the root directory)
-const { hcaptcha } = require("./src/puppeteer-hcaptcha");
+const { hcaptcha } = require("./lib/hcaptcha.js");
 
 // Tell puppeteer to use puppeteer stealth
 puppeteer.use(pluginStealth());
 
 (async () => {
-  // Instantiate a new browser object
-  // Ignore errors associated to https
-  // Can be headless but for example sake we want to show the browser
-  // Set your desired arguments for your puppeteer browser
-  const browser = await puppeteer.launch({
-    ignoreHTTPSErrors: true,
-    headless: false,
-    args: [
-      `--window-size=600,1000`,
-      "--window-position=000,000",
-      "--disable-dev-shm-usage",
-      "--no-sandbox",
-      '--user-data-dir="/tmp/chromium"',
-      "--disable-web-security",
-      "--disable-features=site-per-process",
-    ],
-  });
+    // Instantiate a new browser object
+    // Ignore errors associated to https
+    // Can be headless but for example sake we want to show the browser
+    // Set your desired arguments for your puppeteer browser
+    const browser = await puppeteer.launch({
+        ignoreHTTPSErrors: true,
+        headless: false,
+        args: [
+            `--window-size=600,1000`,
+            "--window-position=000,000",
+            "--disable-dev-shm-usage",
+            "--no-sandbox",
+            '--user-data-dir="/tmp/chromium"',
+            "--disable-web-security",
+            "--disable-features=site-per-process",
+        ],
+    });
 
-  // Get browser pages
-  const [page] = await browser.pages();
+    // Get browser pages
+    const [page] = await browser.pages();
 
-  // Send page to your url
-  await page.goto("URL OF PAGE WITH CAPTCHA ON IT");
+    // Send page to your url
+    await page.goto("URL OF PAGE WITH CAPTCHA ON IT");
 
-  // Remove the page's default timeout function
-  await page.setDefaultNavigationTimeout(0);
+    // Remove the page's default timeout function
+    await page.setDefaultNavigationTimeout(0);
 
-  // Call hcaptcha method passing in our page
-  await hcaptcha(page);
+    // Call hcaptcha method passing in our page
+    await hcaptcha(page);
 
-  // Your page is ready to submit.
-  // Captcha solving should be the last function on your page so we
-  // don't have to worry about the response token expiring.
-  /**
-   * Example:
-   * await page.click("loginDiv > loginBtn");
-   */
+    // Your page is ready to submit.
+    // Captcha solving should be the last function on your page so we
+    // don't have to worry about the response token expiring.
+    /**
+     * Example:
+     * await page.click("loginDiv > loginBtn");
+     */
 })();
 ```
 
-### Return response token only
+### Return response token only (no compile)
 
-```javascript
-// Require our hcaptchaToken method (assuming your file is in the root directory)
-const { hcaptchaToken } = require("./src/puppeteer-hcaptcha");
+```typescript
+const { hcaptchaToken } = require("./lib/hcaptcha");
 
 (async () => {
-  // Create Start Time
-  const startTime = Date.now();
+    // Create Start Time
+    const startTime = Date.now();
 
-  // Call hcaptchaToken method passing in your url
-  let token = await hcaptchaToken("URL OF PAGE WITH CAPTCHA ON IT");
+    // Call hcaptchaToken method passing in your url
+    let token = await hcaptchaToken("URL OF PAGE WITH CAPTCHA ON IT");
 
-  // Get End Time
-  const endTime = Date.now();
+    // Get End Time
+    const endTime = Date.now();
 
-  // Log timed result to console
-  console.log(`Completed in ${(endTime - startTime) / 1000} seconds`);
+    // Log timed result to console
+    console.log(`Completed in ${(endTime - startTime) / 1000} seconds`);
 
-  // P0_eyJ0eXAiOiJ...
-  console.log(token);
+    // P0_eyJ0eXAiOiJ...
+    console.log(token);
 })();
 ```
 

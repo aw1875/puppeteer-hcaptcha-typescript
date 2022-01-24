@@ -9,48 +9,48 @@ import fetch from "node-fetch";
  * @param end optional
  * @returns Random int between start and end time
  */
-export function rnd(start = 3000, end = 5000) {
-  return Math.round(Math.random() * (end - start) + start);
-}
+export const rnd = (start: number = 3000, end: number = 5000): number => {
+    return Math.round(Math.random() * (end - start) + start);
+};
 
 /**
  * @description Tensforflow Image Recognition Function
  * @param {*} imgURL
  * @returns Predictions array
  */
-export async function tensor(imageURL: string) {
-  try {
-    const blob = await fetch(imageURL)
-      .then((res) => res.buffer())
-      .catch((err) => console.log(err));
+export const tensor = async (imageURL: string): Promise<any | null> => {
+    try {
+        const blob = await fetch(imageURL)
+            .then((res) => res.buffer())
+            .catch((err) => console.log(err));
 
-    // Load the model
-    const model = await cocoSsd.load();
+        // Load the model
+        const model = await cocoSsd.load();
 
-    // Classify the image
-    //@ts-expect-error
-    const predictions = await model.detect(tf.node.decodeImage(blob));
+        // Classify the image
+        //@ts-expect-error
+        const predictions = await model.detect(tf.node.decodeImage(blob));
 
-    return predictions;
-  } catch {
-    return null;
-  }
-}
+        return predictions;
+    } catch {
+        return null;
+    }
+};
 
 /**
  * @description Generate mouse movements
  * @returns Mouse Movements array
  */
-export function mm() {
-  const from = { x: 100, y: 100 };
-  const to = { x: 600, y: 700 };
+export const mm = (): any[] => {
+    const from = { x: 100, y: 100 };
+    const to = { x: 600, y: 700 };
 
-  const route = path(from, to);
+    const route = path(from, to);
 
-  const mm: any = [];
-  route.forEach((i: any) => {
-    mm.push([i.x, i.y, i.timestamp]);
-  });
+    const mm: any = [];
+    route.forEach((i: any) => {
+        mm.push([i.x, i.y, i.timestamp]);
+    });
 
-  return mm;
-}
+    return mm;
+};
